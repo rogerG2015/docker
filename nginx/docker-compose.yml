@@ -1,0 +1,22 @@
+version: '2'
+services:
+  proxy:
+    image: nginx:1.13.5 
+    container_name: nginx
+    restart: always
+    networks:
+      net:
+        ipv4_address: 172.22.7.101
+    ports:
+      - 80:80
+      - 443:443
+      - 4443:4443
+    volumes:
+      - ./nginx:/etc/nginx:z
+networks:
+  net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.22.7.0/24

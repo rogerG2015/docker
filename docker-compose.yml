@@ -1,0 +1,90 @@
+version: '2'
+services:
+  redis:
+    image: 127.0.0.1/library/redis:3
+    container_name: redis
+#    ports:
+#      - 6379:6379
+    networks:
+      net:
+        ipv4_address: 172.22.6.104
+  rabbitmq:
+    image: 127.0.0.1/library/rabbitmq:latest
+    container_name: rabbitmq
+    networks:
+      net:
+        ipv4_address: 172.22.6.105
+  zoo1:
+      image: 127.0.0.1/library/zookeeper 
+      container_name: zoo1
+      restart: always
+#      ports:
+#          - 2181:2181
+      environment:
+          ZOO_MY_ID: 1
+          ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+      networks:
+         net:
+           ipv4_address: 172.22.6.101
+  zoo2:
+      image: 127.0.0.1/library/zookeeper
+      container_name: zoo2
+      restart: always
+#      ports:
+#          - 2182:2181
+      environment:
+          ZOO_MY_ID: 2
+          ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+      networks:
+         net:
+           ipv4_address: 172.22.6.102
+  zoo3:
+      image: 127.0.0.1/library/zookeeper
+      container_name: zoo3
+      restart: always
+#      ports:
+#          - 2183:2181
+      environment:
+          ZOO_MY_ID: 3
+          ZOO_SERVERS: server.1=zoo1:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+      networks:
+         net:
+           ipv4_address: 172.22.6.103
+  dubbo-monitor:
+    image: 127.0.0.1/library/dubbo-monitor:latest
+    container_name: dubbo-monitor
+    networks:
+      net:
+        ipv4_address: 172.22.6.106
+  dubbo-admin:
+    image: 127.0.0.1/library/dubbo-admin:latest
+    container_name: dubbo-admin
+    networks:
+      net:
+        ipv4_address: 172.22.6.107
+#  rocketmq:
+#    image: reg-mirror.shie.site/library/rocketmq
+#    ports:
+#      - 9876:9876
+#    networks:
+#      net:
+#        ipv4_address: 172.25.33.57
+#  elasticsearch:
+#    image: reg-dev.shie.com.cn/library/elasticsearch
+#    networks:
+#      net:
+#        ipv4_address: 172.25.33.48
+#  dubbomonitor:
+#    image: reg-mirror.shie.site/test/dubbomonitor
+#    ports:
+#      - 8080:8080
+#    networks:
+#      net:
+#        ipv4_address: 172.25.33.58
+networks:
+  net:
+    driver: bridge 
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.22.6.0/24
